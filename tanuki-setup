@@ -37,7 +37,7 @@ if [[ $action = $install ]]; then
 	tarball_path=$tarball_pre-$short_hash
 
 	if [[ -d $tarball_path ]]; then
-		mv $tarball_path/lib $tanuki_path/
+		cp $tarball_path/lib/* $tanuki_path/
 		sed "s/{TANUKI_PATH}/"$tanuki_path_esc"/g;s/{TANUKI_APPS}/"$tanuki_apps_path_esc"/g" $tarball_path/bin/tanuki > $binpath/tanuki
 		chmod +x $binpath/tanuki
 		rm -rf $tarball_path
