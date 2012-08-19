@@ -1,0 +1,5 @@
+- Merge tanuki and tanuki-setup in just one script
+- Add tanuki help
+- Stop forever app before tanuki remove
+- Write README instructions
+- Write README dependencies
