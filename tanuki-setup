@@ -4,9 +4,11 @@ prefix='/usr'
 libpath=$prefix/lib
 binpath=$prefix/bin
 tanuki_path=$libpath/tanuki
+tanuki_path_esc=`echo $tanuki_path | sed 's/\//\\\\\//g'`
 tarball_url='https://github.com/fluxa/tanuki/tarball/master'
 tarball_pre='fluxa-tanuki'
-tanuki_apps='/home/git'
+tanuki_apps_path='/home/git'
+tanuki_apps_path_esc=`echo $tanuki_apps_path | sed 's/\//\\\\\//g'`
 
 action=$1
 install='install'
@@ -31,12 +33,12 @@ if [[ $action = $install ]]; then
 
 	wget $tarball_url -O $tarball_pre.tar
 	short_hash=`tar -tf $tarball_pre.tar | grep $tarball_pre-[0-9A-Za-z]*\/$ | cut -c14-20`
-	tar -zxvf $tarball_pre.tar
+	tar -zxf $tarball_pre.tar
 	tarball_path=$tarball_pre-$short_hash
 
 	if [[ -d $tarball_path ]]; then
-		cp $tarball_path/lib $tanuki_path/
-		sed "s/{TANUKI_PATH}/"$tanuki_path"/g;s/{TANUKI_APPS}/"$tanuki_apps"/g" $tarball_path/bin/tanuki > $binpath/tanuki
+		mv $tarball_path/lib $tanuki_path/
+		sed "s/{TANUKI_PATH}/"$tanuki_path_esc"/g;s/{TANUKI_APPS}/"$tanuki_apps_path_esc"/g" $tarball_path/bin/tanuki > $binpath/tanuki
 		chmod +x $binpath/tanuki
 		rm -rf $tarball_path
 		rm $tarball_pre.tar
