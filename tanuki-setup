@@ -4,20 +4,46 @@ prefix='/usr'
 libpath=$prefix/lib
 binpath=$prefix/bin
 tanuki_path=$libpath/tanuki
+tarball_url='https://github.com/fluxa/tanuki/tarball/master'
+tarball_pre='fluxa-tanuki'
+tanuki_apps='/home/git'
 
 action=$1
 install='install'
 uninstall='uninstall'
 
+if [[ ${EUID} -ne 0 ]]; then
+	echo "This tool must be run as root"
+	exit 1
+fi
+
 # install
 if [[ $action = $install ]]; then
 
+
 	if [ ! -d "$libpath" ]; then
-	mkdir $libpath
+		mkdir $libpath || echo 'Cannot create '$libpath ' folder'
 	fi
 
 	if [ ! -d "$tanuki_path" ]; then
-		mkdir $tanuki_path
+		mkdir $tanuki_path || echo 'Cannot create '$tanuki_path ' folder'
+	fi
+
+	wget $tarball_url -O $tarball_pre.tar
+	short_hash=`tar -tf $tarball_pre.tar | grep $tarball_pre-[0-9A-Za-z]*\/$ | cut -c14-20`
+	tar -zxvf $tarball_pre.tar
+	tarball_path=$tarball_pre-$short_hash
+
+	if [[ -d $tarball_path ]]; then
+		cp $tarball_path/lib $tanuki_path/
+		sed "s/{TANUKI_PATH}/"$tanuki_path"/g;s/{TANUKI_APPS}/"$tanuki_apps"/g" $tarball_path/bin/tanuki > $binpath/tanuki
+		chmod +x $binpath/tanuki
+		rm -rf $tarball_path
+		rm $tarball_pre.tar
+		echo 'Tanuki installation complete. For help run: tanuki help'
+	else
+		echo 'Cannot find extracted files at '$tarball_path
+		exit 1
 	fi
 
 
@@ -31,9 +57,7 @@ if [[ $action = $uninstall ]]; then
 		rm -rf $tanuki_path
 	fi
 
+	rm -f $binpath/tanuki
+
 fi
-
-
-
-
 

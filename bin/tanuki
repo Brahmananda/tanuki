@@ -1,9 +1,9 @@
 #!/bin/bash
 
 # paths
-tanuki_apps='/home/git' #absolute path for the tanuki aps
+tanuki_apps='{TANUKI_APPS}' #absolute path for the tanuki apps
 tanuki_ext='tanuki' #extension
-tanuki_lib='/usr/lib/tanuki' #libs
+tanuki_lib='{TANUKI_PATH}' #libs
 
 # actions
 create='create'
