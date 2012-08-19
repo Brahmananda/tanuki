@@ -1,0 +1,39 @@
+#!/bin/bash
+
+prefix='/usr'
+libpath=$prefix/lib
+binpath=$prefix/bin
+tanuki_path=$libpath/tanuki
+
+action=$1
+install='install'
+uninstall='uninstall'
+
+# install
+if [[ $action = $install ]]; then
+
+	if [ ! -d "$libpath" ]; then
+	mkdir $libpath
+	fi
+
+	if [ ! -d "$tanuki_path" ]; then
+		mkdir $tanuki_path
+	fi
+
+
+
+fi
+
+# uninstall
+if [[ $action = $uninstall ]]; then
+	
+	if [ -d "$tanuki_path" ]; then
+		rm -rf $tanuki_path
+	fi
+
+fi
+
+
+
+
+

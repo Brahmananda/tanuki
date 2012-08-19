@@ -1,0 +1,50 @@
+#!/bin/sh
+
+# all variables are injected from config file
+prod='{TANUKI_PROD_PATH}'
+app='{TANUKI_NODEAPP}'
+
+# forever config
+out_path=$prod/.forever/out.log
+err_path=$prod/.forever/err.log
+app_path=$prod/$app
+
+# Stop server
+echo ''
+echo 'Stopping application '$app
+forever stop $app_path
+
+# Deployment
+echo ''
+echo 'Pulling update from master -------->>>>'
+GIT_WORK_TREE=$prod GIT_DIR=$prod/.git git pull origin master
+wait
+
+# Dependencies
+echo ''
+echo 'Fetching npm dependencies ------>>>>>>'
+cd $prod
+pwd
+npm install
+wait
+
+# Clean logs
+forever cleanlogs
+#echo > $out_path
+#echo > $err_path
+
+#Start app
+echo ''
+echo 'Starting forever ------->>>>>>>'
+forever -o $out_path -e $err_path -m 1 start $app_path
+wait
+sleep 10
+
+# Logs
+echo ''
+echo 'Wrapping up.. check logs ------>>>>>>'
+cat $err_path
+cat $out_path
+
+echo ''
+echo 'THE END'
