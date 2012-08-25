@@ -10,71 +10,72 @@ create='create'
 remove='remove'
 action=$1
 
+# action: create
 if [ $action = $create ]; then
-echo 'hi!'
-echo 'lets create an app :)'
-read -p 'app name? ' app_name #app name
-read -p 'port? ' nodeport #nodejs port
-app_path=$tanuki_apps/$app_name.$tanuki_ext #apps absolute path
-repo=$app_path/$app_name.git #git path
-prod=$app_path/$app_name #production path
-cpath=$app_path/.$tanuki_ext #config path
-conf=$cpath/config.sh #config file
-app=web.js
-gitrepo=git@localhost:$app_name.$tanuki_ext/$app_name.git
+	echo 'hi!'
+	echo 'lets create an app :)'
+	read -p 'app name? ' app_name #app name
+	read -p 'port? ' nodeport #nodejs port
+	app_path=$tanuki_apps/$app_name #apps absolute path
+	repo=$app_path/$app_name.git #git path
+	prod=$app_path/$app_name #production path
+	cpath=$app_path/.$tanuki_ext #config path
+	conf=$cpath/config.sh #config file
+	app=web.js
+	gitrepo=git@localhost:$app_name/$app_name.git
 
-# skeleton
-mkdir $app_path
-mkdir $repo
-mkdir $prod
-mkdir $cpath
-touch $conf
-chmod +x $conf
-echo app_name=$app_name >> $conf
-echo tanuki_ext=$tanuki_ext >> $conf
-echo repo=$repo >> $conf
-echo prod=$prod >> $conf
-echo app=$app >> $conf
+	# skeleton
+	mkdir $app_path
+	mkdir $repo
+	mkdir $prod
+	mkdir $cpath
+	touch $conf
+	chmod +x $conf
+	echo app_name=$app_name >> $conf
+	echo tanuki_ext=$tanuki_ext >> $conf
+	echo repo=$repo >> $conf
+	echo prod=$prod >> $conf
+	echo app=$app >> $conf
 
-# git repo
-cd $repo
-git --bare init
-wait
-prod_esc=`echo $prod | sed 's/\//\\\\\//g'`
-sed "s/{TANUKI_PROD_PATH}/"$prod_esc"/g;s/{TANUKI_NODEAPP}/"$app"/g" $tanuki_lib/post-update > $repo/hooks/post-update
-chmod +x $repo/hooks/post-update
+	# git repo
+	cd $repo
+	git --bare init
+	wait
+	prod_esc=`echo $prod | sed 's/\//\\\\\//g'`
+	sed "s/{TANUKI_PROD_PATH}/"$prod_esc"/g;s/{TANUKI_NODEAPP}/"$app"/g" $tanuki_lib/post-update > $repo/hooks/post-update
+	chmod +x $repo/hooks/post-update
 
-#git prod
-cd $app_path
-git clone $gitrepo
-wait
-sed 's/{TANUKI_APPNAME}/'$app_name'/g' $tanuki_lib/app/package.json > $prod/package.json
-sed 's/{TANUKI_APPNAME}/'$app_name'/g;s/{TANUKI_PORT}/'$nodeport'/g' $tanuki_lib/app/web.js > $prod/web.js
-sed 's/{TANUKI_APPNAME}/'$app_name'/g' $tanuki_lib/app/README.md > $prod/README.md
-cp $tanuki_lib/app/.gitignore $prod/.gitignore
-cd $prod
-mkdir .forever
-git config user.email "git@tanuki-dome.com" &&
-git config user.name "tanuki" &&
-git add .gitignore web.js README.md package.json &&
-git commit -m 'init' &&
-git push origin master
-wait
-echo 'Project created successfully'
+	#git prod
+	cd $app_path
+	git clone $gitrepo
+	wait
+	sed 's/{TANUKI_APPNAME}/'$app_name'/g' $tanuki_lib/app/package.json > $prod/package.json
+	sed 's/{TANUKI_APPNAME}/'$app_name'/g;s/{TANUKI_PORT}/'$nodeport'/g' $tanuki_lib/app/web.js > $prod/web.js
+	sed 's/{TANUKI_APPNAME}/'$app_name'/g' $tanuki_lib/app/README.md > $prod/README.md
+	cp $tanuki_lib/app/.gitignore $prod/.gitignore
+	cd $prod
+	mkdir .forever
+	git config user.email "git@tanuki-dome.com" &&
+	git config user.name "tanuki" &&
+	git add .gitignore web.js README.md package.json &&
+	git commit -m 'init' &&
+	git push origin master
+	wait
+	echo 'Project created successfully'
 
 fi
 
-
+# action: remove
 if [ $action = $remove ]; then
-echo 'lets delete the app :('
-read -p 'app name to delete? ' app_name 
-app_name=${app_name:-null}
+	echo 'lets delete the app :('
+	read -p 'app name to delete? ' app_name 
+	app_name=${app_name:-null}
 
-if [ $app_name = 'null' ]; then
-	echo 'must type app name'
-	exit 1
-fi
-app_path=$tanuki_apps/$app_name.$tanuki_ext #project path
-echo 'removing '$app_path
-rm -rf $app_path
+	if [ $app_name = 'null' ]; then
+		echo 'must type app name'
+		exit 1
+	fi
+	app_path=$tanuki_apps/$app_name #project path
+	echo 'removing '$app_path
+	rm -rf $app_path
 fi

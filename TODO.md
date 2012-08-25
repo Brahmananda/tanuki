@@ -1,5 +1,8 @@
 - Merge tanuki and tanuki-setup in just one script
-- Add tanuki help
+- Add `tanuki help`
+- Add `tanuki-setup update`
 - Stop forever app before tanuki remove
-- Write README instructions
-- Write README dependencies
+- Write README -> instructions
+- Write README -> dependencies
+- Make tanuki_apps_path configurable
+- 
