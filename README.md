@@ -1,19 +1,6 @@
 # tanuki
-## A simple tool for creating Node.js web apps + git:push deployment for your Raspberry-Pi
+## A simple Node.js web server + git:push deployment
 
 # Instructions
-
-## Pre-setup
-
-### Requirements
-* node.js v0.8.x
-* npm v1.1.x
-* git-core
-
-
-## Setup
-
-To install the tool, run the following command as root:
-<pre>wget http://goo.gl/SQ4UB -O /usr/bin/tanuki-setup && chmod +x /usr/bin/tanuki-setup</pre>
-
-
+To install the tool, run the following command:
+<pre>sudo wget http://goo.gl/SQ4UB -O /usr/bin/tanuki-setup && sudo chmod +x /usr/bin/tanuki-setup</pre>
