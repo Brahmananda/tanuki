@@ -46,25 +46,13 @@ if [[ $action = $install ]]; then
 		chmod +x $binpath/tanuki
 		rm -rf $tarball_path
 		rm $tarball_pre.tar
+		rm -f $binpath/tanuki-setup
 		echo 'Tanuki installation complete. For help run: tanuki help'
 	else
 		echo 'Cannot find extracted files at '$tarball_path
 		exit 1
 	fi
 
-
-
 fi
 
-# uninstall
-if [[ $action = $uninstall ]]; then
-	
-	if [ -d "$tanuki_path" ]; then
-		rm -rf $tanuki_path
-	fi
-
-	rm -f $binpath/tanuki
-	rm -f $binpath/tanuki-setup
-
-fi
 
