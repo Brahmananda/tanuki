@@ -1,14 +1,13 @@
 #!/bin/bash
 
-prefix='/usr'
-libpath=$prefix/lib
-binpath=$prefix/bin
+libpath='/usr/lib'
+binpath='/usr/bin'
 tanuki_path=$libpath/tanuki
 tanuki_path_esc=`echo $tanuki_path | sed 's/\//\\\\\//g'`
 tarball_url='https://github.com/fluxa/tanuki/tarball/master'
 tarball_pre='fluxa-tanuki'
-tanuki_apps_path='/home/git'
-tanuki_apps_path_esc=`echo $tanuki_apps_path | sed 's/\//\\\\\//g'`
+#tanuki_apps_path='/home/git'
+#tanuki_apps_path_esc=`echo $tanuki_apps_path | sed 's/\//\\\\\//g'`
 
 action=$1
 install='install'
@@ -38,7 +37,12 @@ if [[ $action = $install ]]; then
 
 	if [[ -d $tarball_path ]]; then
 		cp -rf $tarball_path/lib/* $tanuki_path/
-		sed "s/{TANUKI_PATH}/"$tanuki_path_esc"/g;s/{TANUKI_APPS}/"$tanuki_apps_path_esc"/g" $tarball_path/bin/tanuki > $binpath/tanuki
+
+		# ask for apps path
+		read -e -p "Please enter the path to the applications folder: " -i "/home/git" APPS_PATH
+		APPS_PATH_ESCAPED=`echo $APPS_PATH | sed 's/\//\\\\\//g'`
+
+		sed "s/{TANUKI_PATH}/"$APPS_PATH_ESCAPED"/g;s/{TANUKI_APPS}/"$APPS_PATH_ESCAPED"/g" $tarball_path/bin/tanuki > $binpath/tanuki
 		chmod +x $binpath/tanuki
 		rm -rf $tarball_path
 		rm $tarball_pre.tar
