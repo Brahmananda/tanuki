@@ -1,17 +1,12 @@
 #!/bin/bash
 
-libpath='/usr/lib'
-binpath='/usr/bin'
-tanuki_path=$libpath/tanuki
+LIB_PATH='/usr/lib'
+BIN_PATH='/usr/bin'
+tanuki_path=$LIB_PATH/tanuki
 tanuki_path_esc=`echo $tanuki_path | sed 's/\//\\\\\//g'`
 tarball_url='https://github.com/fluxa/tanuki/tarball/master'
 tarball_pre='fluxa-tanuki'
-#tanuki_apps_path='/home/git'
-#tanuki_apps_path_esc=`echo $tanuki_apps_path | sed 's/\//\\\\\//g'`
 
-action=$1
-install='install'
-uninstall='uninstall'
 
 if [[ ${EUID} -ne 0 ]]; then
 	echo "This tool must be run as root"
@@ -19,40 +14,34 @@ if [[ ${EUID} -ne 0 ]]; then
 fi
 
 # install
-if [[ $action = $install ]]; then
-
-
-	if [ ! -d "$libpath" ]; then
-		mkdir $libpath || echo 'Cannot create '$libpath ' folder'
-	fi
-
-	if [ ! -d "$tanuki_path" ]; then
-		mkdir $tanuki_path || echo 'Cannot create '$tanuki_path ' folder'
-	fi
-
-	wget $tarball_url -O $tarball_pre.tar
-	short_hash=`tar -tf $tarball_pre.tar | grep $tarball_pre-[0-9A-Za-z]*\/$ | cut -c14-20`
-	tar -zxf $tarball_pre.tar
-	tarball_path=$tarball_pre-$short_hash
-
-	if [[ -d $tarball_path ]]; then
-		cp -rf $tarball_path/lib/* $tanuki_path/
-
-		# ask for apps path
-		read -e -p "Please enter the path to the applications folder: " -i "/home/git" APPS_PATH
-		APPS_PATH_ESCAPED=`echo $APPS_PATH | sed 's/\//\\\\\//g'`
-
-		sed "s/{TANUKI_PATH}/"$APPS_PATH_ESCAPED"/g;s/{TANUKI_APPS}/"$APPS_PATH_ESCAPED"/g" $tarball_path/bin/tanuki > $binpath/tanuki
-		chmod +x $binpath/tanuki
-		rm -rf $tarball_path
-		rm $tarball_pre.tar
-		rm -f $binpath/tanuki-setup
-		echo 'Tanuki installation complete. For help run: tanuki help'
-	else
-		echo 'Cannot find extracted files at '$tarball_path
-		exit 1
-	fi
-
+if [ ! -d "$LIB_PATH" ]; then
+	mkdir $LIB_PATH || echo 'Cannot create '$LIB_PATH ' folder'
 fi
 
+if [ ! -d "$tanuki_path" ]; then
+	mkdir $tanuki_path || echo 'Cannot create '$tanuki_path ' folder'
+fi
+
+wget $tarball_url -O $tarball_pre.tar
+short_hash=`tar -tf $tarball_pre.tar | grep $tarball_pre-[0-9A-Za-z]*\/$ | cut -c14-20`
+tar -zxf $tarball_pre.tar
+tarball_path=$tarball_pre-$short_hash
+
+if [[ -d $tarball_path ]]; then
+	cp -rf $tarball_path/lib/* $tanuki_path/
+
+	# ask for apps path
+	read -e -p "Please enter the path to the applications folder: " -i "/home/git" APPS_PATH
+	APPS_PATH_ESCAPED=`echo $APPS_PATH | sed 's/\//\\\\\//g'`
+
+	sed "s/{TANUKI_PATH}/"$APPS_PATH_ESCAPED"/g;s/{TANUKI_APPS}/"$APPS_PATH_ESCAPED"/g" $tarball_path/bin/tanuki > $BIN_PATH/tanuki
+	chmod +x $BIN_PATH/tanuki
+	rm -rf $tarball_path
+	rm $tarball_pre.tar
+	rm -f $BIN_PATH/tanuki-setup
+	echo 'Tanuki installation complete. For help run: tanuki help'
+else
+	echo 'Cannot find extracted files at '$tarball_path
+	exit 1
+fi
 
