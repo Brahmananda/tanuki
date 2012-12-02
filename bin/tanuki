@@ -45,7 +45,7 @@ if [ $action = $create ]; then
 	git --bare init
 	wait
 	prod_esc=`echo $prod | sed 's/\//\\\\\//g'`
-	sed "s/{TANUKI_PROD_PATH}/"$prod_esc"/g;s/{TANUKI_NODEAPP}/"$app"/g" $BIN_PATH/tanuki/post-update > $repo/hooks/post-update
+	sed "s/{TANUKI_PROD_PATH}/"$prod_esc"/g;s/{TANUKI_NODEAPP}/"$app"/g" $LIB_PATH/tanuki/post-update > $repo/hooks/post-update
 	chmod +x $repo/hooks/post-update
 
 	#git prod
