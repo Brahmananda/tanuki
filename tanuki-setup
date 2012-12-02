@@ -34,7 +34,7 @@ if [[ -d $tarball_path ]]; then
 	read -e -p "Please enter the path to the applications folder: " -i "/home/git" APPS_PATH
 	APPS_PATH_ESCAPED=`echo $APPS_PATH | sed 's/\//\\\\\//g'`
 
-	sed "s/{TANUKI_PATH}/"$APPS_PATH_ESCAPED"/g;s/{TANUKI_APPS}/"$APPS_PATH_ESCAPED"/g" $tarball_path/bin/tanuki > $BIN_PATH/tanuki
+	sed "s/{APPS_PATH}/"$APPS_PATH_ESCAPED"/g" $tarball_path/bin/tanuki > $BIN_PATH/tanuki
 	chmod +x $BIN_PATH/tanuki
 	rm -rf $tarball_path
 	rm $tarball_pre.tar

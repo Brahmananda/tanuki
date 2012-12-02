@@ -1,9 +1,11 @@
 #!/bin/bash
 
 # paths
-APPS_PATH='{TANUKI_APPS}' #absolute path for the tanuki apps
+LIB_PATH='/usr/lib'
+BIN_PATH='/usr/bin'
+APPS_PATH='{APPS_PATH}' #absolute path for the tanuki apps
 EXT='tanuki' #extension
-LIB_PATH='{TANUKI_PATH}' #libs
+
 
 # actions
 create='create'
@@ -43,17 +45,17 @@ if [ $action = $create ]; then
 	git --bare init
 	wait
 	prod_esc=`echo $prod | sed 's/\//\\\\\//g'`
-	sed "s/{TANUKI_PROD_PATH}/"$prod_esc"/g;s/{TANUKI_NODEAPP}/"$app"/g" $LIB_PATH/post-update > $repo/hooks/post-update
+	sed "s/{TANUKI_PROD_PATH}/"$prod_esc"/g;s/{TANUKI_NODEAPP}/"$app"/g" $BIN_PATH/tanuki/post-update > $repo/hooks/post-update
 	chmod +x $repo/hooks/post-update
 
 	#git prod
 	cd $app_path
 	git clone $gitrepo
 	wait
-	sed 's/{TANUKI_APPNAME}/'$app_name'/g' $LIB_PATH/app/package.json > $prod/package.json
-	sed 's/{TANUKI_APPNAME}/'$app_name'/g;s/{TANUKI_PORT}/'$nodeport'/g' $LIB_PATH/app/web.js > $prod/web.js
-	sed 's/{TANUKI_APPNAME}/'$app_name'/g' $LIB_PATH/app/README.md > $prod/README.md
-	cp $LIB_PATH/app/.gitignore $prod/.gitignore
+	sed 's/{TANUKI_APPNAME}/'$app_name'/g' $LIB_PATH/tanuki/app/package.json > $prod/package.json
+	sed 's/{TANUKI_APPNAME}/'$app_name'/g;s/{TANUKI_PORT}/'$nodeport'/g' $LIB_PATH/tanuki/app/web.js > $prod/web.js
+	sed 's/{TANUKI_APPNAME}/'$app_name'/g' $LIB_PATH/tanuki/app/README.md > $prod/README.md
+	cp $LIB_PATH/tanuki/app/.gitignore $prod/.gitignore
 	cd $prod
 	mkdir .forever
 	git config user.email "git@tanuki-dome.com" &&
@@ -84,10 +86,14 @@ fi
 # uninstall
 if [[ $action = $uninstall ]]; then
 	
-	if [ -d "$tanuki_path" ]; then
-		rm -rf $tanuki_path
+	echo "Uninstalling..."
+
+	if [ -d "$LIB_PATH/tanuki" ]; then
+		echo Removing $LIB_PATH/tanuki
+		rm -rf $LIB_PATH/tanuki
 	fi
 
-	rm -f $binpath/tanuki
+	echo Removing $BIN_PATH/tanuki
+	rm -f $BIN_PATH/tanuki
 
 fi
