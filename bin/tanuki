@@ -87,11 +87,9 @@ fi
 if [[ $action = $uninstall ]]; then
 	
 	if [[ ${EUID} -ne 0 ]]; then
-		echo "This tool must be run as root. Try `sudo tanuki uninstall`"
+		echo "This tool must be run as root."
 		exit 1
 	fi
-
-	echo "Uninstalling..."
 
 	if [ -d "$LIB_PATH/tanuki" ]; then
 		echo Removing $LIB_PATH/tanuki
@@ -100,5 +98,7 @@ if [[ $action = $uninstall ]]; then
 
 	echo Removing $BIN_PATH/tanuki
 	rm -f $BIN_PATH/tanuki
+
+	echo "Done."
 
 fi
