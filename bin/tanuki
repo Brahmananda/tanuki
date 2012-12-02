@@ -56,6 +56,8 @@ if [ $action = $create ]; then
 	sed 's/{TANUKI_APPNAME}/'$app_name'/g;s/{TANUKI_PORT}/'$nodeport'/g' $LIB_PATH/tanuki/app/$NODE_APP > $prod/$NODE_APP
 	sed 's/{TANUKI_APPNAME}/'$app_name'/g' $LIB_PATH/tanuki/app/README.md > $prod/README.md
 	cp $LIB_PATH/tanuki/app/.gitignore $prod/.gitignore
+	cp -rf $LIB_PATH/tanuki/app/public $prod/
+	cp -rf $LIB_PATH/tanuki/app/views $prod/
 	cd $prod
 	mkdir .forever
 	git config user.email "git@tanuki-dome.com" &&
