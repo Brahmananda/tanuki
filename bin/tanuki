@@ -5,7 +5,7 @@ LIB_PATH='/usr/lib'
 BIN_PATH='/usr/bin'
 APPS_PATH='{APPS_PATH}' #absolute path for the tanuki apps
 EXT='tanuki' #extension
-
+NODE_APP='server.js' #node application
 
 # actions
 create='create'
@@ -24,7 +24,7 @@ if [ $action = $create ]; then
 	prod=$app_path/$app_name #production path
 	cpath=$app_path/.$EXT #config path
 	conf=$cpath/config.sh #config file
-	app=web.js
+	app=$NODE_APP
 	gitrepo=git@localhost:$app_name/$app_name.git
 
 	# skeleton
@@ -53,14 +53,14 @@ if [ $action = $create ]; then
 	git clone $gitrepo
 	wait
 	sed 's/{TANUKI_APPNAME}/'$app_name'/g' $LIB_PATH/tanuki/app/package.json > $prod/package.json
-	sed 's/{TANUKI_APPNAME}/'$app_name'/g;s/{TANUKI_PORT}/'$nodeport'/g' $LIB_PATH/tanuki/app/web.js > $prod/web.js
+	sed 's/{TANUKI_APPNAME}/'$app_name'/g;s/{TANUKI_PORT}/'$nodeport'/g' $LIB_PATH/tanuki/app/$NODE_APP > $prod/$NODE_APP
 	sed 's/{TANUKI_APPNAME}/'$app_name'/g' $LIB_PATH/tanuki/app/README.md > $prod/README.md
 	cp $LIB_PATH/tanuki/app/.gitignore $prod/.gitignore
 	cd $prod
 	mkdir .forever
 	git config user.email "git@tanuki-dome.com" &&
 	git config user.name "tanuki" &&
-	git add .gitignore web.js README.md package.json &&
+	git add .gitignore $NODE_APP README.md package.json &&
 	git commit -m 'init' &&
 	git push origin master
 	wait
