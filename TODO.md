@@ -1,3 +1,4 @@
+- Check bug where `tanuki create` wont work if app name contains '-'
 - Check existence of installation path
 - Check for dependencies (forever)
 - Add `tanuki help`
